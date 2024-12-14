@@ -1,0 +1,234 @@
+﻿@* @using GoogleCaptcha.HtmlHelpers; *@
+
+@{
+    ViewBag.Title = "FIND A BOTOX® SPECIALIST";
+}
+
+@section headings
+{
+    <h1>Find a Botox<sup>&reg;</sup> specialist</h1>
+    <h2 class="mt-5">For healthcare providers</h2>
+}
+
+<form class="login-form" method="post" data-bind="submit: $root.submit" action="@Url.Action("LoginSubmit","Home")">
+    @Html.AntiForgeryToken()
+    <section id="main" class="login pt-3 pb-5">
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 ps-4">
+                    <h1 class="mt-5 mb-4">
+                        I am a Canadian (select one):
+                    </h1>
+                </div>
+            </div>
+
+            <div class="row mt-3 mb-3">
+                <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 ps-4">
+                    <div class="row">
+                        <div class="col-12 radio-options" data-bind="foreach: specialties">
+                            <label class="p-2 ps-md-0 pe-5">
+                                <span class="pe-2" data-bind="text: $data"></span>
+
+                                <img src="/img/radio_selected.png" data-bind="visible: $root.specialty() === $data">
+                                <img src="/img/radio_blank.png" data-bind="visible: $root.specialty() !== $data">
+
+                                <input type="radio" name="specialty" class="input-hidden"
+                                    data-bind="checked: $root.specialty, attr: { value: $data }">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="login dark pt-3 pb-5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 ps-4">
+                    <hr class="mt-4 mb-5 dotted purple">
+                </div>
+
+                <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 ps-4">
+                    <div class="row">
+                        <div class="col-12 d-flex flex-wrap align-items-center gap-3 my-3">
+                            <select class="form-control" name="province" data-bind="value: province" required>
+                                <option value="">Select Province/Territory</option>
+                                <option value="alberta">Alberta</option>
+                                <option value="british_columbia">British Columbia</option>
+                                <option value="manitoba">Manitoba</option>
+                                <option value="new_brunswick">New Brunswick</option>
+                                <option value="newfoundland">Newfoundland and Labrador</option>
+                                <option value="northwest_territories">Northwest Territories</option>
+                                <option value="nova_scotia">Nova Scotia</option>
+                                <option value="nunavut">Nunavut</option>
+                                <option value="ontario">Ontario</option>
+                                <option value="prince_edward_island">Prince Edward Island</option>
+                                <option value="quebec">Quebec</option>
+                                <option value="saskatchewan">Saskatchewan</option>
+                                <option value="yukon">Yukon</option>
+                            </select>
+                            <div class="text-center arrow">
+                                &rarr;
+                            </div>
+                            <input class="form-control" type="text" name="license_number"
+                                data-bind="textInput: licenseNumber" placeholder="Professional License Number:">
+                            <div class="error-message text-center p-1"
+                                data-bind="visible: errorInput, html: errorInput"></div>
+                        </div>
+
+                        <div class="col-12">
+                            <input class="btn btn-purple-arrow mt-3 mb-5" type="submit" value="Enter">
+                        </div>
+                    </div>
+                    @* <div class="rowform-group">
+                        <div class="col-12 col-md-8">
+                            @Html.GoogleCaptcha()
+                            @Html.InvalidGoogleCaptchaLabel("Captcha is not valid !")
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<div class="modal legal-modal" tabindex="-1">
+    <div class="modal-dialog" style="max-width: 90%;">
+        <div class="modal-content" style="border-radius:2rem;">
+            <div class="modal-header  border-0">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="px-2 px-md-5">
+                    <strong>By clicking “I agree” I confirm that I require the contact information of physicians with
+                        the appropriate qualifications and experience in the treatment of headache disorders and in the
+                        use of required equipment for the administration of BOTOX for the treatment of chronic migraine,
+                        who are in my area, for the purpose of patient referrals, and that I understand and acknowledge
+                        that: </strong>
+                    <ul>
+                        <li>
+                            <span class="text-underline font-weight-bold">Self-Declaration of Qualifications.</span> The
+                            FindABOTOXSpecialist Tool (‘Directory’) lists the contact information of physicians who have
+                            self-certified as having the appropriate qualifications and experience in the treatment of
+                            headache disorders and the administration of BOTOX for such treatment. I acknowledge that I
+                            must refer patients to a physician that I feel is most appropriate with my professional
+                            discretion. If I choose to refer my patient to a physician listed in the Directory, I take
+                            full responsibility for that referral and for the care of the patient. AbbVie has no role in
+                            providing patient care or in facilitating communication between me and any other physician.
+                        </li>
+                        <li>
+                            <span class="text-underline font-weight-bold">No Endorsement.</span> Contact information of
+                            physicians is provided in the Directory for convenience and reference only. A listing in the
+                            Directory is not a recommendation or endorsement by AbbVie of any physician that may be
+                            included in this list. AbbVie has not performed any due diligence with respect to the
+                            qualifications or experience of the physicians listed in the Directory.
+                        </li>
+                        <li>
+                            <span class="text-underline font-weight-bold">Not Exhaustive.</span> The Directory is not
+                            exhaustive. There may be other specialists within my geographical area with experience in
+                            diagnosing and treating headache disorders.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-start">
+                <div class="flex flex-row px-2 px-md-5">
+                    <button data-bind="disable: !viewModel.privacy()" type="button" class="btn btn-agree mb-5 py-3 px-5"
+                        style="color: white; background-color: #7d4199; border-color: #7d4199;">I agree</button>
+                    <button type="button" class="btn mb-5 mr-2 py-3 px-5"
+                        style="color: white; background-color: #7d4199; border-color: #7d4199;"
+                        data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+
+
+
+        function LoginViewModel() {
+            var self = this;
+            this.specialty = ko.observable('');
+            this.province = ko.observable('');
+            this.licenseNumber = ko.observable('');
+            this.legalAccept = ko.observable(false);
+            this.privacy = ko.observable(true);
+
+            this.specialties = ['Neurologist', 'Nurse Practitioner', 'Primary Care Provider', 'Other Healthcare Provider'];
+            this.errorInput = ko.observable(false);
+
+            this.submit = function () {
+                this.errorInput(false);
+
+                if (!this.specialty()) {
+                    this.errorInput('Please select a profession.')
+                    return false;
+                }
+
+
+                if (!this.province()) {
+                    // using bootstrap error message here.
+                    return false;
+                }
+
+                if (!this.licenseNumber()) {
+                    this.errorInput('Sorry, but the number you entered is not valid.');
+                    return false;
+                }
+
+                url = '@Url.Action("ValidateId", "Gating")?id=' + self.licenseNumber() + '&province=' + self.province() + '&specialty=' + self.specialty();
+
+                let result = false;
+
+                if (url) {
+                    $.ajax({
+                        url: url,
+                        type: 'get',
+                        async: false,
+                        success: function (response) {
+                            result = response;
+                        }
+                    })
+                }
+
+
+                if (!result) {
+                    self.errorInput('Sorry, but the number you entered is not valid.');
+                    return false;
+                } else {
+                    // grecaptcha.execute();
+
+                    if (!self.legalAccept()) {
+                        $('.legal-modal').modal('show');
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        var viewModel = null;
+        $(function () {
+            viewModel = new LoginViewModel();
+            ko.applyBindings(viewModel);
+
+
+            $('.btn-agree').click(function () {
+                if (viewModel.privacy()) {
+                    viewModel.legalAccept(true);
+                } else {
+                    viewModel.legalAccept(false);
+                }
+                $('.login-form').submit();
+            });
+        });
+
+    </script>
+}

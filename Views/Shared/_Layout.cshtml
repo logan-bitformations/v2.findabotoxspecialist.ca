@@ -1,0 +1,121 @@
+﻿@inject IConfiguration Configuration
+
+<!DOCTYPE html>
+<html lang="@Context.Request.RouteValues["language"]-ca">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - findabotoxspecialist.ca</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- <link rel="stylesheet" href="~/findabotoxspecialist.ca.styles.css" asp-append-version="true" /> --
+    <!-- Google Tag Manager -->
+    <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', @Configuration["GoogleTagManagerID"]');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Start TrustArc Head -->
+    <style>
+        #consent-banner #truste-banner-logo {
+            height: auto !important;
+            padding: 40px 0;
+        }
+    </style>
+    <script async="async" src="https://consent.trustarc.com/v2/notice/smnlhd" type="text/javascript"></script>
+    <!-- End TrustArc Head -->
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=@Configuration["GoogleTagManagerID"]" height="0"
+            width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <header class="header pb-4">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-3 col-lg-2 logo ps-3 pe-3 text-center">
+                    <a href="@Url.Action("Index")" class="botox-logo">
+                        <img src="/img/EN/logo_botox.png" alt="Logo - BOTOX onabotulinumtoxinA"
+                            class="img-fluid">
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-8 headings text-center text-md-start pt-3 ps-4">
+                    @RenderSection("headings", required: false)
+                </div>
+                <div class="col-md-3 col-lg-2 lang text-center text-md-right pt-md-3 ps-md-0">
+                    <a href="@(Configuration["ENSiteUrl"] + Context.Request.Path)" class="@(Context.Request.RouteValues["language"].ToString() == "en" ? "active" : "")">English</a> |
+                    <a href="@(Configuration["FRSiteUrl"] + Context.Request.Path)" class="@(Context.Request.RouteValues["language"].ToString() == "fr" ? "active" : "")">Français</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="body-content">
+        @RenderBody()
+
+        <!-- Start TrustArc Body -->
+        <div id="consent-banner"
+            style="position: fixed; bottom: 0; z-index: 1040; max-height: 100vh; max-width: 100%; overflow: auto;">
+        </div>
+        <!-- End TrustArc Body -->
+        <footer class="footer pb-5 pt-5">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-2 text-center text-lg-start ps-lg-5">
+                        <img src="/img/EN/logo_abbvie.png" class="img-fluid mb-3" alt="Logo - AbbVie">
+                        <p class="inventory-code">
+                            CA-BCM-240002A / JN24
+                        </p>
+                    </div>
+                    <div class="col-lg-5 text-center text-lg-start">
+                        <p class="mb-2 pt-1">
+                            BOTOX and its design are trademarks of AbbVie Corporation.<br>
+                            &copy; 2024 AbbVie. All rights reserved.<br>
+                        </p>
+                        <div class="d-flex justify-content-center justify-content-lg-start mb-2 mb-lg-0 gap-2">
+                            <a class="" href="https://privacynotifications.ca/en/pp-privacy-policy.html"
+                                target="_blank">Legal Noticy and Privacy</a>
+                            <a class="" href="https://privacynotifications.ca/en/tou-terms-of-use.html"
+                                target="_blank">Terms of Use</a>
+                            @Html.ActionLink("Contact Us", "contact")
+                        </div>
+                    </div>
+                    <div class="col-lg-2 text-center">
+                        <a href="https://www.paab.ca/" target="_blank">
+                            <img class="paab-logo img-fluid mb-2" src="/img/EN/logo_paab.png"
+                                alt="Logo - Pharmaceutical Advertising Advisory Board (PAAB)">
+                        </a>
+                    </div>
+                    <div class="col-lg-3 text-center">
+                        <a href="https://innovativemedicines.ca/" target="_blank">
+                            <img class="mimc-logo img-fluid mb-2" src="/img/EN/logo_mimc.png"
+                                alt="Logo - Innovative Medicines Canada">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </footer>
+        <!-- Start TrustArc Footer -->
+        <div id="teconsent"
+            style="background-color: #e6e7e8; height: 30px; width: 100%; z-index: 1050; text-align: center;"></div>
+        <!-- End TrustArc Footer -->
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/jquery-url.min.js" asp-append-version="true"></script>
+    <script src="~/js/knockout.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

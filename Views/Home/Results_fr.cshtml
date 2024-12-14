@@ -1,0 +1,360 @@
+﻿@{
+    ViewBag.Title = "Trouvez un spécialiste du traitement par BOTOX®";
+}
+
+@section headings
+{
+    <h1>Trouvez un spécialiste du traitement par BOTOX<sup>&reg;</sup></h1>
+    <h2 class="mt-5">Orientez votre patient vers un professionnel de la santé de votre région ayant de l’expérience avec BOTOX</h2>
+}
+
+<section id="main" class="pt-3 pb-3">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 pl-4">
+                @Html.ActionLink("Retour", "Index", null, new { @class = "btn btn-purple-arrow-left fr" })
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="dark">
+    <div class="container-fluid pt-5 pb-5">
+        <div class="row">
+            <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 pl-4">
+                <h1 class="mt-2 mb-4">
+                    <span data-bind="if: loadedResults">
+                        <span data-bind="text: $root.results().length"></span> <span data-bind="if: $root.results().length === 1">médecin trouvé</span><span data-bind="if: $root.results().length !== 1">médecins trouvés</span>
+                    </span>
+                </h1>
+                <div data-bind="if: retrivingData" class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+                <div data-bind="if: loadedResults" id="map" class="img-fluid" style="width: 100%; height: 400px;"></div>
+
+                <table data-bind="if: loadedResults" class="table table-results mt-5 mb-5">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Spécialiste</th>
+                            <th colspan="2" class="d-none d-md-block">Temps d’attente<sup>*</sup></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: $root.results">
+                        <tr>
+                            <td>
+                                <span class="pin purple" data-bind="text: $index() + 1">
+                                    1
+                                </span>
+                            </td>
+                            <td style="max-width: 400px;">
+                                <span data-bind="text: FirstName"></span> <span data-bind="text: LastName"></span><br>
+                                <span data-bind="text: DL_Mailing_Address__c"></span><br>
+                                <span data-bind="text: DL_City__c"></span>, <span data-bind="text: DL_Province__c"></span> <span data-bind="text: DL_Postal_Code__c"></span><br>
+                                Phone: <a data-bind="text: DL_Office_Phone__c, attr: { href: 'tel:+1' + DL_Office_Phone__c  }"></a><br>
+                                Fax: <a data-bind="text: DL_Office_Fax__c, attr: { href: 'fax:+1' + DL_Office_Fax__c  }"></a><br>
+                                <br>
+                                <strong>Spécialité&nbsp;:</strong>
+                                <span data-bind="text: Condition_Treatment__c"></span>
+                                <div class="d-md-none mt-2 mt-md-0">
+                                    <strong>Wait time: </strong>
+                                    <span data-bind="text: Wait_time__c"></span>
+                                </div>
+                            </td>
+                            <td><strong class="d-none d-md-block" data-bind="text: Wait_time__c"></strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row micetype mt-5 mb-3 pt-3 disclaimers">
+            <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 pl-4">
+                <div class="p-1" style="border: 2px solid #7d4199; background-color: #F9F6FA;">
+                    <ul>
+                        <li>
+                            <span class="text-underline font-weight-bold">Autodéclaration des qualifications.</span> L’outil TrouverUnSpecialisteBOTOX (« répertoire ») présente une liste de coordonnées de médecins ayant eux-mêmes attesté avoir les qualifications et l’expérience adéquates dans le traitement des céphalées et l’administration de BOTOX pour ce traitement. Je reconnais devoir diriger mes patients vers un médecin que j’estime le plus compétent en la matière, en usant de ma discrétion professionnelle. Si je décide de diriger un patient vers un médecin dont le nom apparaît dans le répertoire, j’assume l’entière responsabilité de cet aiguillage et des soins que recevra ce patient. AbbVie ne prend part ni à la prestation des soins aux patients ni aux communications entre moi et tout autre médecin.
+                        </li>
+                        <li>
+                            <span class="text-underline font-weight-bold">Absence de recommandation.</span> Les coordonnées de médecins sont fournies dans le répertoire pour des raisons pratiques et à titre informatif seulement. L’inscription d’un médecin au répertoire ne doit pas être interprétée comme une recommandation de ce médecin par AbbVie. AbbVie n’a procédé à aucune vérification diligente des qualifications ou de l’expérience des médecins inscrits dans le répertoire.
+                        </li>
+                        <li>
+                            <span class="text-underline font-weight-bold">Non-exhaustivité du répertoire.</span> Le répertoire n’est pas exhaustif. D’autres spécialistes de ma région géographique pourraient avoir l’expérience dans le diagnostic et le traitement de la migraine chronique.
+                        </li>
+                        <li>
+                            <span class="text-underline font-weight-bold">Temps d’attente.</span> Le temps d’attente est indiqué par les médecins inscrits sur la liste, à titre estimatif seulement. Ces renseignements ne sont peut-être pas à jour.
+                        </li>
+                        <!--
+                        <li>
+                            Attestation de vos compétences. Vous attestez que vous possédez les compétences et l'expérience requises pour le traitement de la migraine chronique et
+                            l'utilisation de l'équipement nécessaire à l'administration de BOTOX dans le traitement de la migraine chronique, et que votre nom figurera au répertoire tant
+                            que la présente attestation demeure valide. Vous contacterez AbbVie sans délai si vous n'êtes plus en mesure d'attester que vous possédez les compétences et
+                            l'expérience nécessaires pour que votre nom figure au répertoire à titre de spécialiste de BOTOX.
+                        </li>
+                        <li>
+                            Soins aux patients. Vous êtes entièrement responsable des soins que vous fournissez aux patients qui pourraient être dirigés vers vous par un professionnel de
+                            la santé qui a consulté le répertoire. AbbVie ne prend part ni à la prestation des soins aux patients ni aux communications entre vous et un autre professionnel
+                            de la santé ou un patient.
+                        </li>
+                        <li>
+                            Absence de recommandation. Les coordonnées des spécialistes et des cliniques de BOTOX sont fournies dans le répertoire pour des raisons pratiques et à titre
+                            informatif uniquement. L'inscription du nom d'un clinicien dans le répertoire ne doit pas être interprétée comme une recommandation au sujet de ce clinicien.
+                            Nul ne doit faire allusion au répertoire de cette manière.
+                        </li>
+                        <li>
+                            Non-exhaustivité du répertoire. Le répertoire a été conçu pour aider les professionnels de la santé à trouver des spécialistes de BOTOX qui pourraient aider à
+                            satisfaire les besoins des patients en matière de soins de santé. Il comprendra les coordonnées de plusieurs cliniciens pouvant exercer leur profession dans la
+                            même région. Cela dit, le répertoire n'est pas exhaustif. D'autres spécialistes de BOTOX ayant de l'expérience dans le diagnostic et le traitement de la migraine
+                            chronique pourraient ne pas faire partie du répertoire.
+                        </li>
+                        <li>
+                            Possibilité de modification. AbbVie peut modifier le répertoire ou cesser de le mettre à jour en tout temps, à sa seule discrétion.
+                        </li>
+                        -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 pl-4">
+                <div class="row micetype mt-3 mb-5">
+                    <div class="col-lg-6">
+                        <p>
+                            <sup>Pr</sup>BOTOX<sup>&reg;</sup> (onabotulinumtoxinA) est indiqué&nbsp;:
+                        </p>
+
+                        <h3>
+                            Blépharospasme
+                        </h3>
+                        <ul>
+                            <li>
+                                pour le traitement du blépharospasme associé à la dystonie, y compris le blépharospasme essentiel bénin ou les troubles du nerf facial (nerf VII) chez les patients âgés de 12 ans ou plus;
+                            </li>
+                        </ul>
+
+                        <h3>
+                            Strabisme
+                        </h3>
+                        <ul>
+                            <li>
+                                pour le traitement du strabisme chez les patients âgés de 12 ans ou plus; BOTOX est inefficace pour traiter le strabisme paralytique chronique, sauf pour réduire la contracture du muscle antagoniste dans le cadre d’une réparation chirurgicale;
+                            </li>
+                        </ul>
+
+                        <h3>
+                            Dystonie cervicale (torticolis spasmodique)
+                        </h3>
+                        <ul>
+                            <li>
+                                pour l’atténuation des symptômes subjectifs et des signes objectifs de la dystonie cervicale (torticolis spasmodique) chez l’adulte;
+                            </li>
+                        </ul>
+
+                        <h3>
+                            Spasticité focale
+                        </h3>
+                        <ul>
+                            <li>
+                                pour la prise en charge de la spasticité focale, y compris pour le traitement de la spasticité des membres supérieurs associée à l'accident vasculaire cérébral chez l’adulte;
+                            </li>
+                            <li>
+                                pour le traitement symptomatique de la spasticité des membres inférieurs associée à l'accident vasculaire cérébral chez l’adulte;
+                            </li>
+                            <li>
+                                pour le traitement symptomatique de la spasticité des membres supérieurs et (ou) inférieurs chez les enfants âgés de 2 ans ou plus;
+                            </li>
+                        </ul>
+                        <p>
+                            BOTOX n’est pas destiné à remplacer les traitements habituels qui constituent la norme de soins et n’est pas susceptible d’être efficace pour améliorer l’amplitude des mouvements d’une articulation dont le muscle présente une contracture permanente.
+                        </p>
+
+                        <h3>Hyperhidrose axillaire primaire</h3>
+                        <ul>
+                            <li>
+                                pour le traitement de l’hyperhidrose axillaire chez les patients âgés de 18 ans ou plus;
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <h3>
+                            Migraine chronique
+                        </h3>
+                        <ul>
+                            <li>
+                                pour le traitement prophylactique des céphalées chez l’adulte atteint de migraine chronique (épisodes de céphalée qui surviennent au moins 15 jours par mois et qui durent 4 heures ou plus);
+                            </li>
+                        </ul>
+                        <h3>
+                            Dysfonctionnement vésical<br>
+                            Hyperactivité neurogène du détrusor associée à une affection neurologique
+                        </h3>
+                        <ul>
+                            <li>
+                                pour le traitement de l’incontinence urinaire causée par l’hyperactivité neurogène du détrusor attribuable à une vessie neurogène associée à la sclérose en plaques ou à une lésion de la moelle épinière sous le niveau du rachis cervical chez l’adulte qui ne répond pas de façon satisfaisante ou qui présente une intolérance aux médicaments anticholinergiques;
+                            </li>
+                        </ul>
+
+                        <h3>Vessie hyperactive (hyperactivité vésicale)</h3>
+                        <ul>
+                            <li>
+                                pour le traitement de la vessie hyperactive accompagnée de symptômes d’incontinence urinaire, d’urgence mictionnelle et de pollakiurie, chez l’adulte qui ne répond pas de façon satisfaisante ou qui présente une intolérance aux médicaments anticholinergiques.
+                            </li>
+                        </ul>
+
+                        <h3 class="text-underline">
+                            Pour de plus amples renseignements
+                        </h3>
+                        <p>
+                            Veuillez consulter la monographie du produit au <a href="https://abbv.ie/botoxcanadapmfr" target="_blank">abbv.ie/BotoxCanadaPMFR</a> pour connaître les renseignements sur les contre-indications, les mises en garde et précautions importantes, les autres mises en garde et précautions, les effets secondaires, les interactions, la posologie et l’administration, les conditions d’utilisation clinique, la conservation et la manipulation du produit.
+                        </p>
+                        <p>
+                            Vous pouvez également vous procurer la monographie du produit en téléphonant au <a class="text-decoration-none text-dark" href="tel:18887048271">1-888-704-8271</a>.
+                        </p>
+
+                        <h3 class="text-uppercase">Référence&nbsp;:</h3>
+                        <p>Corporation AbbVie. Monographie actuelle de BOTOX.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts
+{
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=@ViewBag.GoogleMapsAPIClientKey&libraries=marker"></script>
+    @* @Scripts.Render("~/Scripts/jquery.markericoncreator.min.js") *@
+
+    <script>
+
+        var map;
+        function initGoogleMap() {
+            const myLatLng = { lat: 56.1304, lng: -106.3468 }; // center of canada
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 4,
+                center: myLatLng,
+                mapId: 'specialist-map',
+            });
+        }
+
+        // Method: Balloon tip navigation
+        function balloonNavigation(longitude, latitude, docIndex) {
+            // Retrieve the point
+            var point = new google.maps.LatLng(latitude, longitude);
+
+            // Position the map
+            _map.panTo(point);
+            _map.setZoom(13);
+        }
+
+        function LoginViewModel() {
+            var self = this;
+
+            var params = $.url('?');
+
+            self.id = ko.observable(params['id']);
+
+            self.mode = ko.observable(params['mode']);
+
+            self.postalCode = ko.observable(params['postal_code']);
+            self.distance = ko.observable(params['distance']);
+
+            self.province = ko.observable(params['province']);
+            self.city = ko.observable(params['city']);
+
+            self.name = ko.observable(params['name']);
+            self.selectedDoctor = ko.observable('');
+
+            self.results = ko.observableArray();
+            self.loadedResults = ko.observable(false);
+            self.retrivingData = ko.observable(false);
+
+
+            self.errorInput = ko.observable(false);
+
+            self.submit = function (e) {
+                //e.preventDefault();
+                self.errorInput(false);
+
+                var url = undefined;
+                switch (self.mode()) {
+                    case 'postal_code':
+                        url = '@Url.Action("FindByPostalCode", "API")?postal_code=' + self.postalCode() + '&distance=' + self.distance();
+                        break;
+                    case 'city':
+                        url = '@Url.Action("FindByCity", "API")?province=' + self.province() + '&city=' + self.city();
+                        break;
+                    case 'name':
+                        url = '@Url.Action("FindByName", "API")?name=' + self.name();
+                        break;
+                    case 'details':
+                        url = '@Url.Action("FindById", "API")?id=' + self.id();
+                        break;
+                }
+
+                if (url) {
+                    self.retrivingData(true);
+                    $.get(url, function (results) {
+                        self.retrivingData(false);
+                        self.loadedResults(true);
+                        self.results(results.records);
+                        initGoogleMap();
+
+                        var totalLat = 0;
+                        var totalLng = 0;
+                        var pointCount = 0;
+                        var bounds = new google.maps.LatLngBounds();
+                        $.each(self.results(), function (i, r) {
+                            var lat = parseFloat(r.DL_Location__Latitude__s);
+                            var lng = parseFloat(r.DL_Location__Longitude__s);
+
+                            if (!isNaN(lat)) { totalLat += lat; }
+                            if (!isNaN(lng)) { totalLng += lng; pointCount += 1; }
+
+                            const icon = document.createElement("span");
+                            icon.textContent = (i + 1).toString();
+
+                            const pin = new google.maps.marker.PinElement({
+                                background: '#7d4199',
+                                borderColor: '#7d4199',
+                                glyph: icon,
+                                glyphColor: 'white',
+                            })
+
+                            const marker = new google.maps.marker.AdvancedMarkerElement({
+                                map,
+                                position: { lat: lat, lng: lng },
+                                title: (i + 1).toString(),
+                                content: pin.element,
+                            });
+
+                            bounds.extend(marker.position);
+                        });
+
+                        if (pointCount > 0) {
+                            map.setCenter(new google.maps.LatLng(totalLat / pointCount, totalLng / pointCount));
+                            map.fitBounds(bounds);
+                        }
+                    });
+                }
+
+                return false;
+            };
+
+            self.submit();
+        }
+
+
+
+        var viewModel = null;
+        $(function () {
+            viewModel = new LoginViewModel();
+            ko.applyBindings(viewModel);
+        });
+    </script>
+}
+

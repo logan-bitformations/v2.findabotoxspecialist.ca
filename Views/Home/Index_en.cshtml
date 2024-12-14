@@ -1,0 +1,207 @@
+﻿@{
+    ViewBag.Title = "FIND A BOTOX® SPECIALIST";
+}
+
+
+@section headings
+{
+    <h1>Find a Botox<sup>&reg;</sup> specialist</h1>
+    <h2 class="mt-5">Refer your patient to a local healthcare provider experienced with botox</h2>
+}
+
+
+<main class="home">
+    <div data-bind="if: $root.results">
+        <table class="table striped" data-bind="foreach: $root.results">
+            <tr>
+                <td data-bind="html: FirstName"></td>
+                <td data-bind="html: LastName"></td>
+            </tr>
+        </table>
+
+    </div>
+
+    <form action="@Url.Action("Results", "Home")" method="GET" data-bind="submit: validateForm">
+        <input type="hidden" name="mode" data-bind="value: $root.mode" />
+        <section id="main" class="pt-3 pb-0">
+            <div class="container-fluid">
+                <div class="row mb-1">
+                    <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 pl-4">
+                        <h1 class="mt-5 mb-5">
+                            Locate a specialist using one of the following options:
+                        </h1>
+                    </div>
+                    <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 pl-4 options pb-1">
+                        <a href="#" class="p-2 mr-2 option" data-bind="css: { active: mode() === 'postal_code' }, click: function() { mode('postal_code') }">
+                            Search by postal code
+                        </a>
+                        <a href="#" class="p-2 mr-2 option" data-bind="css: { active: mode() === 'city' }, click: function() { mode('city') }">
+                            Search by province and city
+                        </a>
+                        <a href="#" class="p-2 mr-2 option" data-bind="css: { active: mode() === 'name' }, click: function() { mode('name') }">
+                            Search by name
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dark">
+            <div class="container-fluid pt-5 pb-5">
+                <div class="row">
+                    <div class="col-md-6 col-lg-8 offset-md-3 offset-lg-2 pl-4">
+                        <div class="row" data-bind="if: mode() === 'postal_code'">
+                            <div class="col-12 d-flex flex-wrap align-items-center">
+                                <input class="form-control postal-code my-3 mr-3" type="text" name="postal_code" placeholder="Postal Code" data-bind="textInput: postalCode">
+                                <select name="distance" class="form-control distance my-3 mr-3" data-bind="value: distance">
+                                    <option value="">Distance</option>
+                                    <option value="1">1 km</option>
+                                    <option value="5">5 km</option>
+                                    <option value="10">10 km</option>
+                                    <option value="15">15 km</option>
+                                    <option value="20">20 km</option>
+                                    <option value="50">50 km</option>
+                                    <option value="75">75 km</option>
+                                    <option value="100">100 km</option>
+                                    <option value="240">250 km</option>
+                                </select>
+                                <div class="pl-4 my-3 border-left-purple border-left-dotted">
+                                    <input class="btn btn-purple-arrow" type="submit" value="Search">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" data-bind="if: mode() === 'city'">
+                            <div class="col-12 d-flex flex-wrap align-items-center">
+                                <select class="form-control province my-3 mr-3" name="province" data-bind="value: province, options: provinces, optionsValue: 'DL_Province__c', optionsText: 'DL_ProvinceName', optionsCaption: 'Select Province'">
+                                </select>
+                                <div class="text-center arrow my-3 mr-3">
+                                    &rarr;
+                                </div>
+                                <select class="form-control city my-3 mr-3" name="city" data-bind="value: city, options: citiesForProvince, optionsValue: 'DL_City__c', optionsText: 'DL_City__c', optionsCaption: 'Select City'">
+                                </select>
+                                <div class="pl-4 my-3 border-left-purple border-left-dotted">
+                                    <input class="btn btn-purple-arrow" type="submit" value="Search">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" data-bind="if: mode() === 'name'">
+                            <div class="col-12 d-flex flex-wrap align-items-center">
+                                <input class="form-control my-3 mr-3" type="text" name="name" placeholder="Enter Name" data-bind="value: name">
+                                <div class="text-center arrow my-3 mr-3">
+                                    &rarr;
+                                </div>
+                                <select class="form-control doctors my-3 mr-3" name="selectedDoctor" data-bind="value: selectedDoctor, options: doctorsForName, optionsValue: 'Name', optionsText: 'Name', optionsCaption: 'Doctors Found'">
+                                </select>
+                                <div class="pl-4 my-3 mr-3 border-left-purple border-left-dotted">
+                                    <input class="btn btn-purple-arrow" type="submit" value="Search">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+</main>
+
+@section scripts
+{
+    <script>
+        function LoginViewModel() {
+            var self = this;
+            self.mode = ko.observable('postal_code');
+
+            self.postalCode = ko.observable('');
+            self.distance = ko.observable('');
+
+            self.province = ko.observable('');
+            self.city = ko.observable('');
+
+            self.name = ko.observable('');
+
+            self.results = ko.observableArray();
+
+            self.errorInput = ko.observable(false);
+
+            self.cities = ko.observableArray([]);
+            $.get('@Url.Action("GetCitiesList", "API")', function (response) {
+                self.cities(response.records);
+            });
+
+            self.citiesForProvince = ko.pureComputed(function () {
+                return self.cities().filter(function (c) { return c.DL_Province__c === self.province() })
+            });
+
+            self.provinces = ko.observableArray([]);
+            $.get('@Url.Action("GetProvincesList", "API")', function (response) {
+                self.provinces(response.sort(function (a, b) {
+                    return a.DL_ProvinceName == b.DL_ProvinceName ? 0 : (a.DL_ProvinceName < b.DL_ProvinceName ? -1 : 1)
+                }));
+            });
+
+            // get all hcps/doctors
+            self.doctors = ko.observableArray([]);
+            $.get('@Url.Action("FindByName", "API")', function (response) {
+                self.doctors(response.records);
+            });
+
+            // filter hcps/doctors based on name given to text input
+            self.doctorsForName = ko.pureComputed(function () {
+                return self.doctors()
+                    .sort(function (a, b) {
+                        return a.LastName == b.LastName ? 0 : (a.LastName < b.LastName ? -1 : 1)
+                    })
+                    .filter(function (h) { return h.Name.toLowerCase().includes(self.name().toLowerCase()) });
+            });
+
+            // when you select a doctor, fill in the text input
+            self.selectedDoctor = ko.pureComputed({
+                write: function (value) {
+                    if (value) self.name(value);
+                },
+                read: function () {
+                    return self.name();
+                }
+            });
+
+            self.validateForm = function () {
+                $('.validation-error').removeClass('validation-error');
+
+                switch (self.mode()) {
+                    case 'postal_code':
+                        if (!self.postalCode()) {
+                            $('.postal-code').addClass('validation-error');
+                            return false;
+                        }
+                        if (!self.distance()) {
+                            $('.distance').addClass('validation-error');
+                            return false;
+                        }
+                        break;
+                    case 'city':
+                        if (!self.province()) {
+                            $('.province').addClass('validation-error');
+                            return false;
+                        }
+                        if (!self.city()) {
+                            $('.city').addClass('validation-error');
+                            return false;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+        }
+
+        var viewModel = null;
+        $(function () {
+            viewModel = new LoginViewModel();
+            ko.applyBindings(viewModel);
+        });
+    </script>
+}
